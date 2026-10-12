@@ -1,6 +1,9 @@
 # Build status
 
-_Last updated: 2026-10-12 — release decisions applied (Vercel + private GitHub, sanitized CLAUDE.md,
+_Last updated: 2026-10-12 — production origin now read from the server-only
+`Lalitha_Barri_WEBSITE_URL` variable (see RELEASE_CHECKLIST.md for a domain problem to fix).
+Earlier: production metadata configured for the Vercel deployment
+(see RELEASE_CHECKLIST.md). Earlier: release decisions applied (Vercel + public GitHub repository by choice, sanitized CLAUDE.md,
 social-sharing image, production-origin setting in `lib/site-url.ts`). See RELEASE_CHECKLIST.md.
 The original CLAUDE.md brief is kept privately at `private-originals/CLAUDE.original.md`.
 Staged locally; not committed, pushed, or deployed._
@@ -9,7 +12,7 @@ Staged locally; not committed, pushed, or deployed._
 
 | Input | Path | Status |
 | --- | --- | --- |
-| Approved résumé | `public/resume.pdf` | Present, unchanged. Served at `/resume.pdf` |
+| Approved public résumé | `public/resume.pdf` | Replaced 2026-10-12 with your newly approved version (186,792 bytes, md5 `6efc1895…3e09`). No phone number in its text, metadata or links. Professional content otherwise identical to the previous version. Served at `/resume.pdf`. See RELEASE_CHECKLIST.md for the old version still in Git history |
 | **Hero portrait (current)** | `public/images/hero-portrait-denim-tall.jpeg` | 3000×4000, no EXIF, unedited; cropped only by positioning inside the frame (`content/media.ts` → `portrait.crop`: head and upper torso, ~8% headroom) |
 | Personal backups (not public, not committed) | `private-originals/` | `portrait-original.jpg`, `portrait-blue-landscape.jpeg`, `portrait-blue-original.jpeg`, `gallery-waterfront-original.jpeg`, ` herpportrait.jpeg`. Moved out of `public/` during release prep so they can't be downloaded from the site; contents unchanged (checksums verified). The folder is git-ignored. Crop values for the two alternative portraits are noted in `content/media.ts` |
 | Notebook photographs | 12 files in `public/images/photography/` | Present. Byte-identical (checksum) to the originals in `~/Desktop/captures/`. No GPS data in any file (EXIF checked) |

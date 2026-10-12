@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site-url";
 import { SprigOrnament } from "@/components/botanicals";
 import { PhotoViewer } from "@/components/photo-viewer";
 import { getCollections } from "@/content/photography";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/notebook",
   title: "Notebook · Photography",
+  socialTitle: "Notebook · Photography · Lalitha Barri",
   description: "Photographs by Lalitha Barri, grouped into small collections.",
-};
+});
 
 export default function PhotographyPage() {
   const collections = getCollections();

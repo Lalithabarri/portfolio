@@ -17,6 +17,12 @@ export const profile = {
 
 export const mailto = `mailto:${profile.email}`;
 
+// Default page description (homepage and sharing cards).
+export const siteDescription =
+  "Lalitha Barri — software engineer working across full-stack applications, backend services, applied AI, and distributed systems. Open to software engineering and applied AI roles across the USA.";
+
+export const siteTitle = `${profile.name} — ${profile.role}`;
+
 // Header links point at homepage anchors so they work from every route.
 export const navLinks: NavLink[] = [
   { label: "Experience", href: "/#experience" },

@@ -220,9 +220,10 @@ read the first red lines — they name the file to fix.
 
 ## 8. Publish updates
 
-The site will be hosted on **Vercel**, connected to a **private GitHub
-repository**. (At the time of writing, the repository and Vercel project
-haven't been connected yet; once they are, these steps apply as-is.)
+The site is hosted on **Vercel**, connected to the GitHub repository
+`Lalithabarri/portfolio`. The repository is **public** (an intentional
+choice), so anyone can read what you commit: never commit passwords, keys,
+`.env` files, or the private `private-originals/` folder.
 
 1. Save your changes and run the checks in section 7.
 2. In VS Code's **Source Control** panel (the branch icon on the left), type
@@ -236,6 +237,9 @@ haven't been connected yet; once they are, these steps apply as-is.)
 
 Drafts (`draft: true`) are never published, because Vercel runs the
 production build.
+
+Published notes are added to the site's `sitemap.xml` automatically; drafts
+are not.
 
 ---
 

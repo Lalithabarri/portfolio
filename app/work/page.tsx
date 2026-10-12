@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site-url";
 import { Icon } from "@/components/icons";
 import { ProjectIllustration } from "@/components/illustrations";
 import { LegacyBankWalkthrough } from "@/components/legacybank-walkthrough";
@@ -6,11 +7,13 @@ import { PageIntro } from "@/components/page-intro";
 import { projects } from "@/content/projects";
 import { profile } from "@/content/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/work",
   title: "Work",
+  socialTitle: "Work · Lalitha Barri",
   description:
     "Projects by Lalitha Barri: LegacyBank, Quorum, Streamline, Waypoint, and an LSM-tree storage engine — what each does, the problem, what I built, and how it was validated.",
-};
+});
 
 export default function WorkPage() {
   return (

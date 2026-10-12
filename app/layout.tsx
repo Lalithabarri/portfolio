@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { DM_Sans, Fraunces } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { profile } from "@/content/site";
+import { profile, siteDescription, siteTitle } from "@/content/site";
 import { siteUrl } from "@/lib/site-url";
 import "./globals.css";
 
@@ -20,23 +20,22 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
 });
 
-const description =
-  "Lalitha Barri — software engineer working across full-stack applications, backend services, applied AI, and distributed systems. Open to software engineering and applied AI roles across the USA.";
-
 export const metadata: Metadata = {
-  // Production origin: configured in lib/site-url.ts (unset until the real
-  // domain exists — see the steps there).
+  // Production origin from lib/site-url.ts (Lalitha_Barri_WEBSITE_URL, server-only).
   metadataBase: siteUrl,
   title: {
-    default: `${profile.name} — ${profile.role}`,
+    default: siteTitle,
     template: `%s · ${profile.name}`,
   },
-  description,
+  description: siteDescription,
   authors: [{ name: profile.name }],
+  // Site-wide defaults only. Canonical URLs are set per page (via
+  // pageMetadata) — never here, or every page would inherit "/".
   openGraph: {
-    title: `${profile.name} — ${profile.role}`,
-    description,
     type: "website",
+    siteName: profile.name,
+    title: siteTitle,
+    description: siteDescription,
   },
   twitter: {
     card: "summary_large_image",

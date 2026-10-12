@@ -5,6 +5,7 @@ import { SprigOrnament } from "@/components/botanicals";
 import { Icon } from "@/components/icons";
 import { WatercolorRidge } from "@/components/watercolor";
 import { formatNoteDate, getNote, getNotes } from "@/lib/notes";
+import { pageMetadata } from "@/lib/site-url";
 
 // With Cache Components enabled, at least one param is required at build
 // time. While there are no notes, a placeholder is generated and answered
@@ -19,12 +20,17 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps<"/notebook/notes/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const note = getNote(slug);
-  if (!note) return { title: "Note not found" };
-  return {
+  // Missing notes (and drafts in production, which getNote never returns)
+  // get no canonical URL and are kept out of search results.
+  if (!note) return { title: "Note not found", robots: { index: false, follow: false } };
+  // Drafts are only visible in `npm run dev`; never give them a canonical.
+  if (note.draft) return { title: note.title, description: note.summary, robots: { index: false, follow: false } };
+  return pageMetadata({
+    path: `/notebook/notes/${note.slug}`,
     title: note.title,
+    socialTitle: `${note.title} · Lalitha Barri`,
     description: note.summary,
-    ...(note.draft ? { robots: { index: false, follow: false } } : {}),
-  };
+  });
 }
 
 export default async function NotePage({ params }: PageProps<"/notebook/notes/[slug]">) {

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { DriedSprig, LavenderSprig } from "@/components/botanicals";
 import { ContactSection } from "@/components/contact-section";
@@ -13,8 +14,11 @@ import { WashBloom, WatercolorRidge } from "@/components/watercolor";
 import { getHomepagePhotos } from "@/content/photography";
 import { getProject, projects } from "@/content/projects";
 import { publications } from "@/content/research";
-import { about, education, hero, interests, profile } from "@/content/site";
+import { about, education, hero, interests, profile, siteDescription, siteTitle } from "@/content/site";
 import { getLatestPublishedNote } from "@/lib/notes";
+import { pageMetadata } from "@/lib/site-url";
+
+export const metadata: Metadata = pageMetadata({ path: "/", socialTitle: siteTitle, description: siteDescription });
 
 export default function HomePage() {
   const legacyBank = getProject("legacybank");

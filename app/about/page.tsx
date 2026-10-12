@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site-url";
 import { ContactSection } from "@/components/contact-section";
 import { Icon } from "@/components/icons";
 import { PageIntro } from "@/components/page-intro";
 import { publications } from "@/content/research";
 import { about, education, profile, skills } from "@/content/site";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/about",
   title: "About",
+  socialTitle: "About · Lalitha Barri",
   description:
     "About Lalitha Barri: software engineering and AI interests, education at Stony Brook University and VIT, technical skills, and how to get in touch.",
-};
+});
 
 export default function AboutPage() {
   return (

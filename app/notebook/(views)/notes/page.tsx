@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site-url";
 import { Icon } from "@/components/icons";
 import { NoteCard } from "@/components/note-card";
 import { getNotes } from "@/lib/notes";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/notebook/notes",
   title: "Notebook · Notes",
+  socialTitle: "Notebook · Notes · Lalitha Barri",
   description: "Engineering notes and short thoughts by Lalitha Barri.",
-};
+});
 
 export default function NotesPage() {
   const notes = getNotes();
