@@ -1,26 +1,356 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ------------------------------------------------------------------
+   Design tokens — palette, type, and layout live here so every page
+   shares them. Tailwind turns each --color-* into utilities such as
+   bg-ivory, text-navy, border-line.
+   ------------------------------------------------------------------ */
+@theme {
+  --color-ivory: #faf9f5;
+  --color-paper: #ffffff;
+  --color-navy: #18364d;
+  --color-muted: #4c6576;
+  --color-action: #285f91;
+  --color-action-strong: #1f4c75;
+  --color-wash: #dfeaf3;
+  --color-wash-soft: #edf3f8;
+  --color-periwinkle: #b9c9e0;
+  --color-line: #d4e1ea;
+  --color-tape: #e8e0cb;
+  --color-petal: #f1dfe0;
+  --color-cream: #fbf7ee;
+  --color-dusty: #9db4cf;
+  --color-mist: #dbe6f1;
+  --color-slate: #6f8db3;
+
+  --container-site: 70rem; /* ≈1120px content width */
+  --spacing-gutter: clamp(1rem, 4vw, 2rem);
+  --spacing-section: clamp(4rem, 9vw, 7rem);
+
+  --shadow-paper: 0 1px 0 rgb(24 54 77 / 0.04), 0 14px 32px -20px rgb(24 54 77 / 0.35);
+  --shadow-photo: 0 2px 4px rgb(24 54 77 / 0.08), 0 22px 40px -22px rgb(24 54 77 / 0.5);
 }
 
+/* next/font exposes the font files through these variables (see layout.tsx). */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-fraunces), "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  interpolate-size: allow-keywords;
+}
+
+/* Let unusually long words wrap instead of overflowing (e.g. at large text
+   sizes). Has no effect on normal-size text that already fits. */
+:where(h1, h2, h3, h4, p, li, dt, dd, figcaption, a, button) {
+  overflow-wrap: anywhere;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-padding-top: 5.5rem; /* keep anchored headings clear of the sticky header */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-ivory);
+  /* Paper texture: soft large-scale mottling (first) over a fine grain
+     (second). Both stay under ~5% opacity so text contrast is unchanged. */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='640'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.006' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.62 0 0 0 0 0.71 0 0 0 0 0.81 0 0 0 0.16 -0.05'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.09 0 0 0 0 0.21 0 0 0 0 0.3 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  color: var(--color-navy);
+  overflow-x: clip; /* decorations may bleed past the edge; never scroll sideways */
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--color-periwinkle);
+  color: var(--color-navy);
+}
+
+/* Visible, consistent keyboard focus everywhere. */
+:focus-visible {
+  outline: 2px solid var(--color-action);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@layer components {
+  .site-container {
+    width: 100%;
+    max-width: calc(var(--container-site) + 2 * var(--spacing-gutter));
+    margin-inline: auto;
+    padding-inline: var(--spacing-gutter);
+  }
+
+  /* Journal paper: warm cream with a faint blue wash in one corner.
+     Decorations inside use .card-decor and sit behind the text. */
+  .paper-card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 90% at 0% 0%, rgb(223 234 243 / 0.55), transparent 55%),
+      linear-gradient(var(--color-cream), color-mix(in srgb, var(--color-cream) 70%, var(--color-paper)));
+    border: 1px solid color-mix(in srgb, var(--color-line) 80%, var(--color-tape));
+    border-radius: 0.875rem;
+    box-shadow: var(--shadow-paper);
+  }
+  .card-decor {
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-action);
+  }
+
+  /* Translucent strip of tape holding a photo or card. */
+  .tape {
+    position: absolute;
+    height: 1.9rem;
+    width: 6.5rem;
+    background: color-mix(in srgb, var(--color-tape) 78%, transparent);
+    box-shadow: 0 1px 2px rgb(24 54 77 / 0.08);
+    mask-image: linear-gradient(90deg, transparent 0 2px, #000 2px calc(100% - 2px), transparent 0);
+  }
+
+  /* Decorative layer: positioned freely behind the content of its
+     nearest \`isolate\` parent, never catches clicks. Add z-10 to bring a
+     decoration in front (e.g. flowers overlapping a photo frame). */
+  .decor {
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.875rem;
+    padding: 0.625rem 1.35rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition:
+      background-color 160ms ease,
+      color 160ms ease,
+      border-color 160ms ease,
+      transform 160ms ease;
+  }
+  .btn-primary {
+    background: var(--color-navy);
+    color: var(--color-paper);
+  }
+  .btn-primary:hover {
+    background: var(--color-action);
+  }
+  .btn-secondary {
+    border: 1px solid var(--color-periwinkle);
+    background: color-mix(in srgb, var(--color-paper) 70%, transparent);
+    color: var(--color-navy);
+  }
+  .btn-secondary:hover {
+    border-color: var(--color-action);
+    color: var(--color-action);
+  }
+  .btn:active {
+    transform: translateY(1px);
+  }
+
+  .text-link {
+    color: var(--color-action);
+    font-weight: 600;
+    text-decoration-line: underline;
+    text-decoration-color: var(--color-periwinkle);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.3em;
+    transition: text-decoration-color 160ms ease, color 160ms ease;
+  }
+  .text-link:hover {
+    color: var(--color-action-strong);
+    text-decoration-color: currentColor;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    border: 1px solid var(--color-line);
+    background: var(--color-wash-soft);
+    padding: 0.2rem 0.65rem;
+    font-size: 0.8rem;
+    color: var(--color-muted);
+  }
+}
+
+/* Native <details> accordions: hide the default marker and animate
+   height where the browser supports it. */
+summary {
+  list-style: none;
+  cursor: pointer;
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+details::details-content {
+  height: 0;
+  overflow: clip;
+  transition:
+    height 220ms ease,
+    content-visibility 220ms ease allow-discrete;
+}
+details[open]::details-content {
+  height: auto;
+}
+
+/* Full-screen photo viewer (native <dialog>). */
+dialog.photo-viewer {
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: hidden;
+}
+dialog.photo-viewer::backdrop {
+  background: rgb(18 40 58 / 0.9);
+  backdrop-filter: blur(4px);
+}
+dialog.photo-viewer[open] {
+  animation: lightbox-in 180ms ease-out;
+}
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.985);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.animate-fade-up {
+  animation: fade-up 220ms ease-out both;
+}
+
+/* Typography for Markdown notes. */
+.note-prose {
+  color: var(--color-muted);
+  font-size: 1.075rem;
+  line-height: 1.75;
+}
+.note-prose > * + * {
+  margin-top: 1.15em;
+}
+.note-prose h2,
+.note-prose h3 {
+  margin-top: 2em;
+  font-family: var(--font-serif);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--color-navy);
+}
+.note-prose h2 {
+  font-size: 1.6rem;
+}
+.note-prose h3 {
+  font-size: 1.3rem;
+}
+.note-prose strong {
+  color: var(--color-navy);
+}
+.note-prose a {
+  color: var(--color-action);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--color-periwinkle);
+  text-underline-offset: 0.25em;
+}
+.note-prose ul,
+.note-prose ol {
+  padding-left: 1.4em;
+}
+.note-prose ul {
+  list-style: disc;
+}
+.note-prose ol {
+  list-style: decimal;
+}
+.note-prose li + li {
+  margin-top: 0.4em;
+}
+.note-prose blockquote {
+  border-left: 3px solid var(--color-periwinkle);
+  padding-left: 1em;
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+.note-prose code {
+  border-radius: 0.3rem;
+  background: var(--color-wash-soft);
+  padding: 0.1em 0.35em;
+  font-size: 0.9em;
+}
+.note-prose pre {
+  overflow-x: auto;
+  border: 1px solid var(--color-line);
+  border-radius: 0.6rem;
+  background: var(--color-paper);
+  padding: 1rem 1.1rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.note-prose pre code {
+  background: none;
+  padding: 0;
+}
+.note-prose img {
+  border-radius: 0.4rem;
+}
+.note-prose hr {
+  border-color: var(--color-line);
+}
+
+/* Respect reduced-motion preferences everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
